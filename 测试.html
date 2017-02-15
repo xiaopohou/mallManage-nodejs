@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+<button id="bt" onclick="handle()" style="height: 50px;width: 150px">ppppppp</button>
+<script>
+    function handle() {
+        var settings = {
+            "url": "http://localhost:3000/test",
+            "method": "POST",
+            "data": {
+                "itemCategory": "sdf",
+                "itemSaleList": [
+                    {
+                        "price": "0",
+                        "standard": "2L",
+                        "brand": "嘉实多"
+                    },
+                    {
+                        "price": "0",
+                        "standard": "4L",
+                        "brand": "嘉实多"
+                    },
+                    {
+                        "price": "0",
+                        "standard": "2L",
+                        "brand": "美孚"
+                    },
+                    {
+                        "price": "0",
+                        "standard": "4L",
+                        "brand": "美孚"
+                    }
+                ],
+                "itemName": "45425",
+                "optionService": [
+                    {
+                        "ItemDesc": "无",
+                        "ItemPrice": "32",
+                        "ItemName": "打蜡",
+                        "key": "1"
+                    },
+                    {
+                        "ItemDesc": "无",
+                        "ItemPrice": "100",
+                        "ItemName": "更换空调滤芯",
+                        "key": "2"
+                    }
+                ],
+                "serviceDesc": "123",
+                "serviceType": "保养-更换空调滤清器",
+                "serviceName": "4335"
+            }
+
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    }
+</script>
+</body>
+</html>
