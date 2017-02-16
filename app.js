@@ -5,10 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/carRoute');
-var routes_net = require('./routes/netRoute');//网点管理路由
-var routes_user = require('./routes/userRoute');//用户管理路由
-var routes_order = require('./routes/orderRoute');//订单管理路由
 var routes_store = require('./routes/服务查询');//服务查询路由
 var routes_service = require('./routes/服务发布');//服务发布路由
 
@@ -36,11 +32,8 @@ app.use(bodyParser.urlencoded({ extended: true }));// for parsing application/x-
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/', routes_net);//可以有多个路由
-app.use('/', routes_user);
-app.use('/', routes_order);
-app.use('/', routes_store);
+
+app.use('/', routes_store);//可以有多个路由
 app.use('/', routes_service);
 
 
