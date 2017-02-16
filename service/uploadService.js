@@ -1,6 +1,4 @@
-/**
- * Created by dpwangying on 2017-1-12.
- */
+
 "use strict";
 
 let mongoose = require('mongoose');
@@ -9,6 +7,7 @@ let resSend = require('../config/resSend');
 const mysql = require('mysql');
 const mysqlConfig = require('../config/mysqlConfig');
 let pool = mysql.createPool(mysqlConfig.mysql);
+const mongoConfig = require('../config/mongoConfig');
 
 const qiniu = require('qiniu');//七牛云API
 const multiparty = require('multiparty');//文件上传中间件
@@ -21,18 +20,15 @@ class MyEmitter extends EventEmitter {}
 module.exports = {
     find_service_class: function (req, res) {
         console.log('------推送给前端可选的服务分类------');
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
+        let db = mongoose.createConnection(mongoConfig.mongodb);//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
         db.once('open', function () {
             console.log('connected');
         });
 
-        let myschema = mongoose.Schema({
-            // service_category: Array,
-            // service_name: Array
-        },{collection: 'servicelist'});
+        let myschema = mongoose.Schema({},{collection: 'servicelist'});
         let ServiceModel = db.model('serviceModel',myschema);
-        // var te = new Servicelist();
+
         ServiceModel.find(function (err, result) {
             if (err) {
                 console.log(err);
@@ -48,7 +44,7 @@ module.exports = {
     add_service_class: function (req, res) {
         console.log('---------增加服务类别----------');
         console.log('request body: ', req.body);
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
+        let db = mongoose.createConnection(mongoConfig.mongodb);//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
         db.once('open', function () {
             console.log('connected');
@@ -73,7 +69,7 @@ module.exports = {
 
     find_commodity_class: function (req, res) {
         console.log('------推送给前端定义好的单商品分类------');
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
+        let db = mongoose.createConnection(mongoConfig.mongodb);//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
         db.once('open', function () {
             console.log('connected');
@@ -97,7 +93,7 @@ module.exports = {
 
     find_uploaded_commodity_class: function (req, res) {
         console.log('------推送给前端已发布存在的单商品分类------');
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
+        let db = mongoose.createConnection(mongoConfig.mongodb);//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
         db.once('open', function () {
             console.log('connected');
@@ -136,7 +132,7 @@ module.exports = {
     find_commodity_byClass: function (req, res) {
         console.log('------根据商品类别获取商品列表------');
         console.log('type from frontEnd:', req.body.type);
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
+        let db = mongoose.createConnection(mongoConfig.mongodb);//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
         db.once('open', function () {
             console.log('mongodb connected');
@@ -188,7 +184,7 @@ module.exports = {
     upload_service: function (req, res) {
         console.log('------接受前端单商品组合成的单一服务项写入数据库------');
         console.log('request data: ',req.body);
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');
+        let db = mongoose.createConnection(mongoConfig.mongodb);
         db.on('error',console.error.bind(console,'connection error:'));
         db.on('open', () => {
             console.log('connected');
@@ -216,7 +212,7 @@ module.exports = {
     upload_commodity: function (req, res) {
         console.log('------上传数据------');
         console.log(req.body);
-        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');
+        let db = mongoose.createConnection(mongoConfig.mongodb);
         db.on('error',console.error.bind(console,'connection error:'));
         db.once('open', function () {
             console.log('connected');
