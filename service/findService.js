@@ -2,7 +2,7 @@
  * Created by dpwangying on 2016/12/12.
  */
 var mysql = require('mysql');
-var mysqlConfig = require('../config/服务查询数据库');
+var mysqlConfig = require('../config/mysqlConfig');
 var resSend = require('../config/resSend');
 
 var pool = mysql.createPool(mysqlConfig.mysql);

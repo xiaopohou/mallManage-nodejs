@@ -5,8 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes_store = require('./routes/服务查询');//服务查询路由
-var routes_service = require('./routes/服务发布');//服务发布路由
+var routes_store = require('./routes/findServiceRouter');//服务查询路由
+var routes_service = require('./routes/uploadServiceRouter');//服务发布路由
 
 var app = express();
 

@@ -3,7 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var service = require('../service/服务查询service');
+var service = require('../service/findService');
 
 /*查询门店*/
 router.post('/find/store/by-city', function (req, res, next) {

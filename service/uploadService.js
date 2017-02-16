@@ -7,7 +7,7 @@ let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;//mongoose promise库将被移除，使用es6代替
 let resSend = require('../config/resSend');
 const mysql = require('mysql');
-const mysqlConfig = require('../config/服务查询数据库');
+const mysqlConfig = require('../config/mysqlConfig');
 let pool = mysql.createPool(mysqlConfig.mysql);
 
 const qiniu = require('qiniu');//七牛云API
@@ -19,7 +19,7 @@ const EventEmitter = require('events');
 class MyEmitter extends EventEmitter {}
 
 module.exports = {
-    upload_service_list: function (req, res) {
+    find_service_class: function (req, res) {
         console.log('------推送给前端可选的服务分类------');
         let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
@@ -27,20 +27,6 @@ module.exports = {
             console.log('connected');
         });
 
-        // var kittySchema = mongoose.Schema({
-        //    name: String
-        // });
-        // var Kitten = db.model('tests',kittySchema);//kittens就是集合的名称（一定是复数）
-        // var silence = new Kitten({name: 'Silence'});
-        // // console.log(silence.name);
-        // silence.save(function (err, result) {
-        //     if (err) {
-        //         console.log(err);
-        //     } else {
-        //         console.log(result);
-        //     }
-        // });
-        // res.send('mongoose');
         let myschema = mongoose.Schema({
             // service_category: Array,
             // service_name: Array
@@ -59,7 +45,33 @@ module.exports = {
         });
     },
 
-    commodity_class: function (req, res) {
+    add_service_class: function (req, res) {
+        console.log('---------增加服务类别----------');
+        console.log('request body: ', req.body);
+        let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
+        db.on('error',console.error.bind(console,'connection error:'));
+        db.once('open', function () {
+            console.log('connected');
+        });
+
+        let myschema = mongoose.Schema({serviceClass:{}},{collection: 'serviceclass'});
+        let ServiceModel = db.model('serviceModel',myschema);
+        let arr = {serviceClass:req.body};
+        ServiceModel.create( arr, (err, result) => {
+            if (err) {
+                console.log(err);
+                resSend.jsonSend('-1', 'error', '', res);
+            } else {
+                console.log(result);
+                resSend.jsonSend('0', 'success', result, res);
+            }
+            db.close();
+        });
+
+    },
+
+
+    find_commodity_class: function (req, res) {
         console.log('------推送给前端定义好的单商品分类------');
         let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
@@ -67,20 +79,6 @@ module.exports = {
             console.log('connected');
         });
 
-        // var kittySchema = mongoose.Schema({
-        //    name: String
-        // });
-        // var Kitten = db.model('tests',kittySchema);//kittens就是集合的名称（一定是复数）
-        // var silence = new Kitten({name: 'Silence'});
-        // // console.log(silence.name);
-        // silence.save(function (err, result) {
-        //     if (err) {
-        //         console.log(err);
-        //     } else {
-        //         console.log(result);
-        //     }
-        // });
-        // res.send('mongoose');
         let myschema = mongoose.Schema({
             commodity_category: {},
         },{collection: 'commodityclass'});
@@ -97,7 +95,7 @@ module.exports = {
         });
     },
 
-    commodity_category: function (req, res) {
+    find_uploaded_commodity_class: function (req, res) {
         console.log('------推送给前端已发布存在的单商品分类------');
         let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
         db.on('error',console.error.bind(console,'connection error:'));
@@ -135,7 +133,7 @@ module.exports = {
     /*
     * 输入商品类别，输出该类别所有单商品列表
     * */
-    findCommodityListByClass: function (req, res) {
+    find_commodity_byClass: function (req, res) {
         console.log('------根据商品类别获取商品列表------');
         console.log('type from frontEnd:', req.body.type);
         let db = mongoose.createConnection('mongodb://localhost:27017/testdb');//只有放在函数里面使用完才能关闭连接
@@ -187,7 +185,7 @@ module.exports = {
         });
     },
 
-    service_put: function (req, res) {
+    upload_service: function (req, res) {
         console.log('------接受前端单商品组合成的单一服务项写入数据库------');
         console.log('request data: ',req.body);
         let db = mongoose.createConnection('mongodb://localhost:27017/testdb');
@@ -215,7 +213,7 @@ module.exports = {
         // };
     },
 
-    test: function (req, res) {
+    upload_commodity: function (req, res) {
         console.log('------上传数据------');
         console.log(req.body);
         let db = mongoose.createConnection('mongodb://localhost:27017/testdb');
